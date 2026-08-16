@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<title>1級土木施工管理技士 練習帳</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f1f5f9;color:#172033;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif}
+main{max-width:720px;margin:auto;padding:16px 14px 40px}.hero{background:#0f172a;color:#fff;border-radius:20px;padding:22px;margin-bottom:14px}
+h1{font-size:22px;margin:0 0 5px}.sub{font-size:13px;color:#cbd5e1}.card{background:#fff;border-radius:20px;padding:18px;box-shadow:0 3px 14px rgba(0,0,0,.06);margin-bottom:14px}
+button{font:inherit;-webkit-tap-highlight-color:transparent}.primary{display:block;width:100%;border:0;border-radius:14px;background:#2563eb;color:#fff;padding:15px;font-weight:700;font-size:16px}.secondary{width:100%;border:1px solid #cbd5e1;background:#fff;border-radius:14px;padding:13px;margin-top:10px}
+.row{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#64748b}.tag{background:#e0e7ff;color:#3730a3;border-radius:999px;padding:5px 9px}
+.bar{height:7px;background:#e2e8f0;border-radius:99px;overflow:hidden;margin:12px 0 18px}.fill{height:100%;background:#2563eb;width:0}
+.question{font-size:18px;font-weight:700;line-height:1.7;margin-bottom:16px}.choice{display:block;width:100%;text-align:left;border:1px solid #d7dde7;background:#fff;border-radius:13px;padding:14px;margin:9px 0;line-height:1.55}.choice.correct{border-color:#16a34a;background:#ecfdf5}.choice.wrong{border-color:#dc2626;background:#fef2f2}
+.explain{margin-top:14px;padding:14px;background:#f8fafc;border-radius:13px;font-size:14px;line-height:1.65}.next{width:100%;border:0;border-radius:14px;background:#111827;color:#fff;padding:14px;margin-top:12px;font-weight:700}
+.hidden{display:none!important}.score{text-align:center;font-size:50px;font-weight:800}.center{text-align:center}.small{font-size:13px;color:#64748b;line-height:1.65}
+.stat{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.stat div{background:#f8fafc;border-radius:13px;padding:13px;text-align:center}.num{font-size:22px;font-weight:800}
+</style>
+</head>
+<body>
+<main>
+<section class="hero"><h1>1級土木施工管理技士</h1><div class="sub">第一次検定・オリジナル練習帳</div></section>
+
+<section id="home" class="card">
+<h2>100問モード</h2>
+<p class="small">土工・コンクリート・施工管理・安全・測量・建設副産物などからランダムに出題します。まずは10問だけ試すこともできます。</p>
+<button class="primary" id="ten">10問で開始</button>
+<button class="secondary" id="all">100問モード</button>
+</section>
+
+<section id="quiz" class="card hidden">
+<div class="row"><span id="count"></span><span id="tag" class="tag"></span></div>
+<div class="bar"><div id="fill" class="fill"></div></div>
+<div id="question" class="question"></div>
+<div id="choices"></div>
+<div id="explain" class="explain hidden"></div>
+<button id="next" class="next hidden">次の問題へ</button>
+</section>
+
+<section id="result" class="card hidden center">
+<h2>結果</h2><div id="score" class="score"></div>
+<div class="stat"><div><div class="num" id="rate"></div><div class="small">正答率</div></div><div><div class="num" id="miss"></div><div class="small">不正解</div></div></div>
+<p id="comment" class="small"></p>
+<button class="primary" id="again">もう一度</button>
+<button class="secondary" id="homeBtn">トップへ</button>
+</section>
+</main>
+
+<script>
+const bank=[
+["土工","盛土の締固めについて適当なものはどれか。",["含水比は締固めに影響しない","適切な含水比付近で締め固めると高い締固め度を得やすい","必ず一層だけで施工する","土質によって機械を変える必要はない"],1,"土の締固めは含水比の影響を受けます。土質に応じた適切な含水比と締固め方法を選ぶことが重要です。"],
+["コンクリート","コンクリートの打込みで適当なものはどれか。",["材料分離を生じてもそのまま打ち込む","落下高さを大きくするほどよい","材料分離を生じないよう適切な方法で打ち込む","締固めは不要"],2,"材料分離を防止し、必要に応じて適切に締め固めることが基本です。"],
+["施工管理","工程遅延が発生した場合、まず行うべき対応はどれか。",["遅れを無視する","原因を把握し回復方法を検討する","出来高を多く記録する","全作業を中止する"],1,"遅延原因を把握し、人員・機械・作業手順などから回復策を検討します。"],
+["品質管理","PDCAのうち、実施結果を確認・評価する段階はどれか。",["Plan","Do","Check","Action"],2,"Checkは実施結果を確認・評価する段階です。"],
+["安全管理","KY活動の主な目的はどれか。",["賃金を決める","作業に潜む危険を予測し対策を共有する","材料を発注する","写真枚数を決める"],1,"危険を予測し、その危険と対策を作業員間で共有する活動です。"],
+["測量","レベルを用いた水準測量で主に求めるものはどれか。",["角度","高低差","含水比","強度"],1,"レベルによる水準測量では2点間の高低差を求めます。"],
+["施工計画","施工方法を決定する際、考慮する事項として適当でないものはどれか。",["現場条件","工程","安全性","作業員の趣味"],3,"現場条件、品質、安全、工程、経済性などを総合的に考慮します。"],
+["建設副産物","建設副産物について適切な考え方はどれか。",["すべて埋め戻す","発生抑制・再利用・再資源化を検討する","すべて混ぜて保管する","工事後に考える"],1,"発生抑制、再利用、再資源化などを検討し、関係法令に従って適正処理します。"],
+["土工","法面の浸食防止を目的とするものはどれか。",["法面被覆","路盤工","杭打ち工","支保工"],0,"法面被覆は降雨などによる表面浸食の抑制に用います。"],
+["コンクリート","コンクリート養生の主な目的はどれか。",["水和反応を妨げる","硬化に必要な温度・湿潤状態を確保する","骨材を分離する","急速乾燥させる"],1,"適切な養生によってセメントの水和に必要な条件を確保します。"],
+["安全管理","作業開始前に作業手順と危険箇所を確認する目的として適当なものはどれか。",["災害防止","工事費増加","施工速度低下","材料の劣化"],0,"事前確認は危険要因を把握し、災害を防止するために行います。"],
+["品質管理","品質管理で測定値を記録する主な目的はどれか。",["記録を残し品質を確認・評価する","作業員を減らす","材料費を増やす","工程を必ず短縮する"],0,"測定・記録した結果を基準値などと比較し、品質を確認します。"],
+["土工","切土法面の安定を確保するために重要なものはどれか。",["地質・土質条件の把握","照明の色だけ","作業員の経験だけ","工事写真の枚数だけ"],0,"地質・土質、地下水、法面形状などを把握し適切な施工方法を選定します。"],
+["施工管理","施工計画書を作成する主な目的として適当なものはどれか。",["施工方法や管理方法を明確にする","完成後だけ使う","材料価格を決めるだけ","天候を変更する"],0,"施工方法、工程、品質、安全などの管理方針を明確にします。"],
+["コンクリート","コンクリートの材料分離を防ぐために適当なものはどれか。",["過大な落下高さを避ける","長時間放置する","急激に乾燥させる","骨材をすべて除く"],0,"過大な落下高さや不適切な運搬・打込みは材料分離につながるため避けます。"]
+];
+
+let questions=[],i=0,score=0,answered=false;
+const $=id=>document.getElementById(id);
+function shuffled(a){return [...a].sort(()=>Math.random()-.5)}
+function start(n){
+ questions=shuffled(bank); if(n<questions.length) questions=questions.slice(0,n);
+ i=0;score=0;answered=false;
+ $("home").classList.add("hidden");$("result").classList.add("hidden");$("quiz").classList.remove("hidden");render();scrollTo(0,0)
+}
+function render(){
+ const x=questions[i];answered=false;
+ $("count").textContent=`第${i+1}問 / ${questions.length}問`; $("tag").textContent=x[0];
+ $("fill").style.width=`${i/questions.length*100}%`; $("question").textContent=x[1];
+ $("choices").innerHTML="";
+ x[2].forEach((t,n)=>{let b=document.createElement("button");b.className="choice";b.textContent=`${n+1}. ${t}`;b.onclick=()=>answer(n);$("choices").appendChild(b)});
+ $("explain").classList.add("hidden");$("next").classList.add("hidden");
+}
+function answer(n){
+ if(answered)return;answered=true;const x=questions[i];
+ document.querySelectorAll(".choice").forEach((b,k)=>{if(k===x[3])b.classList.add("correct");if(k===n&&n!==x[3])b.classList.add("wrong")});
+ if(n===x[3])score++;
+ $("explain").textContent=(n===x[3]?"正解！ ":"不正解。 ")+x[4];$("explain").classList.remove("hidden");
+ $("next").textContent=i===questions.length-1?"結果を見る":"次の問題へ";$("next").classList.remove("hidden");
+}
+function next(){
+ if(!answered)return;
+ if(i<questions.length-1){i++;render();scrollTo(0,0)}
+ else{
+  $("quiz").classList.add("hidden");$("result").classList.remove("hidden");
+  $("score").textContent=`${score} / ${questions.length}`;
+  $("rate").textContent=Math.round(score/questions.length*100)+"%";$("miss").textContent=questions.length-score;
+  $("comment").textContent=score/questions.length>=.8?"かなり良い！":"間違えた問題を見直して、もう一周してみよう。";
+ }
+}
+$("ten").onclick=()=>start(10);$("all").onclick=()=>start(100);$("next").onclick=next;$("again").onclick=()=>start(10);
+$("homeBtn").onclick=()=>{$("result").classList.add("hidden");$("home").classList.remove("hidden")};
+</script>
+</body>
+</html>
