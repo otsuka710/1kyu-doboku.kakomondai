@@ -175,6 +175,8 @@ function render(){
 function answer(n,b){
   if(done)return; done=true;
   const x=list[i],ok=n===x.answer-1;
+  const buttons=[...document.querySelectorAll(".choice")];
+  const correctPos=buttons.findIndex(z=>Number(z.dataset.original)===x.answer-1)+1;
   document.querySelectorAll(".choice").forEach(z=>{
     z.disabled=true;
     if(Number(z.dataset.original)===x.answer-1)z.classList.add("correct");
@@ -183,7 +185,7 @@ function answer(n,b){
   if(ok){score++;wrong=wrong.filter(id=>id!==x.id)}else if(!wrong.includes(x.id))wrong.push(x.id);
   const h=history[x.category]||{n:0,c:0};h.n++;if(ok)h.c++;history[x.category]=h;
   save();
-  el("fb").innerHTML=(ok?"<b>正解！</b>":"<b>不正解。</b>")+"<br>正解："+(x.answer)+"番<br>"+x.explanation;
+  el("fb").innerHTML=(ok?"<b>正解！</b>":"<b>不正解。</b>")+"<br>正解："+correctPos+"番<br>"+x.explanation;
   el("next").classList.remove("hidden");
 }
 function next(){i++;if(i>=list.length)finish();else render()}
